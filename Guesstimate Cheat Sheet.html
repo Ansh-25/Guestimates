@@ -1,0 +1,848 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Complete Indian Guesstimate Cheat Sheet</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"
+    onerror="let s=document.createElement('script');s.src='https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js';document.head.appendChild(s)"></script>
+  <style>
+    :root {
+      --bg-color: #0f172a;
+      --card-bg: #1e293b;
+      --card-border: #334155;
+      --text-main: #f8fafc;
+      --text-muted: #94a3b8;
+      --accent-blue: #38bdf8;
+      --accent-purple: #c084fc;
+      --accent-green: #4ade80;
+      --accent-orange: #fb923c;
+      --accent-pink: #f472b6;
+      --accent-yellow: #facc15;
+      --ff-sans: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      --ff-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background-color: var(--bg-color);
+      color: var(--text-main);
+      font-family: var(--ff-sans);
+      padding: 16px;
+      line-height: 1.5;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    .widget-container {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .header-card {
+      background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+      border: 1px solid var(--card-border);
+      border-radius: 16px;
+      padding: 20px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+    }
+
+    .header-title {
+      font-size: 24px;
+      font-weight: 700;
+      background: linear-gradient(90deg, var(--accent-blue), var(--accent-purple));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-bottom: 4px;
+    }
+
+    .header-subtitle {
+      color: var(--text-muted);
+      font-size: 14px;
+    }
+
+    /* Upgraded Responsive Navigation Bar */
+    .nav-container {
+      background-color: var(--card-bg);
+      padding: 8px;
+      border-radius: 16px;
+      border: 1px solid var(--card-border);
+    }
+
+    .nav-grid {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .tab-btn {
+      flex: 1 1 calc(33.333% - 8px);
+      min-width: 220px;
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 14px;
+      border: 1px solid transparent;
+      border-radius: 10px;
+      background: rgba(15, 23, 42, 0.4);
+      color: var(--text-muted);
+      font-family: var(--ff-sans);
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      text-align: left;
+    }
+
+    .tab-num {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.08);
+      color: var(--text-muted);
+      font-family: var(--ff-mono);
+      font-size: 11px;
+      font-weight: 700;
+      flex-shrink: 0;
+    }
+
+    .tab-btn:hover {
+      color: var(--text-main);
+      background: rgba(255, 255, 255, 0.05);
+    }
+
+    .tab-btn.is-active {
+      background: linear-gradient(135deg, rgba(56, 189, 248, 0.15), rgba(129, 140, 248, 0.15));
+      border-color: rgba(56, 189, 248, 0.4);
+      color: var(--accent-blue);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    }
+
+    .tab-btn.is-active .tab-num {
+      background: var(--accent-blue);
+      color: #0f172a;
+    }
+
+    .view-panel {
+      display: none;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .view-panel.is-active {
+      display: flex;
+    }
+
+    /* KPI Cards */
+    .kpi-row {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+      gap: 12px;
+    }
+
+    .kpi-card {
+      background-color: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+      padding: 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .kpi-label {
+      font-size: 11px;
+      color: var(--text-muted);
+      font-family: var(--ff-mono);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .kpi-value {
+      font-size: 20px;
+      font-weight: 700;
+      color: var(--accent-blue);
+    }
+
+    .kpi-sub {
+      font-size: 11px;
+      color: var(--text-muted);
+    }
+
+    /* Layout Grids */
+    .charts-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 16px;
+    }
+
+    .chart-card {
+      background-color: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 14px;
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .chart-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+    }
+
+    .chart-title {
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--text-main);
+    }
+
+    .chart-caption {
+      font-size: 11px;
+      color: var(--text-muted);
+      font-family: var(--ff-mono);
+    }
+
+    .widget-viewport {
+      position: relative;
+      width: 100%;
+      height: 250px;
+    }
+
+    /* Tree View & Custom Info Components */
+    .tree-card {
+      background-color: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 14px;
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .tree-node {
+      font-family: var(--ff-mono);
+      font-size: 13px;
+      line-height: 1.6;
+      color: var(--accent-blue);
+      background: rgba(15, 23, 42, 0.6);
+      padding: 12px;
+      border-radius: 8px;
+      border: 1px solid var(--card-border);
+      white-space: pre-wrap;
+    }
+
+    .rule-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 16px;
+    }
+
+    .rule-card {
+      background-color: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 14px;
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .rule-tag {
+      font-family: var(--ff-mono);
+      font-size: 11px;
+      padding: 3px 8px;
+      border-radius: 999px;
+      background: rgba(56, 189, 248, 0.1);
+      color: var(--accent-blue);
+      align-self: flex-start;
+      border: 1px solid rgba(56, 189, 248, 0.2);
+    }
+
+    .rule-title {
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--text-main);
+    }
+
+    .rule-desc {
+      font-size: 13px;
+      color: var(--text-muted);
+      line-height: 1.4;
+    }
+
+    .metric-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      margin-top: 4px;
+    }
+
+    .metric-item {
+      display: flex;
+      justify-content: space-between;
+      font-size: 13px;
+      padding: 6px 8px;
+      background: rgba(15, 23, 42, 0.4);
+      border-radius: 6px;
+      border: 1px solid rgba(255, 255, 255, 0.05);
+    }
+
+    .metric-key {
+      color: var(--text-muted);
+    }
+
+    .metric-val {
+      font-family: var(--ff-mono);
+      color: var(--accent-green);
+      font-weight: 600;
+    }
+
+    /* Calculator Controls */
+    .calc-box {
+      padding: 12px;
+      background: rgba(15, 23, 42, 0.6);
+      border-radius: 8px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      border: 1px solid var(--card-border);
+    }
+
+    .calc-input-group {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .calc-label {
+      font-size: 11px;
+      color: var(--text-muted);
+    }
+
+    .calc-input {
+      width: 100%;
+      padding: 8px 12px;
+      border-radius: 6px;
+      border: 1px solid var(--card-border);
+      background: var(--card-bg);
+      color: var(--text-main);
+      font-family: var(--ff-mono);
+      font-size: 13px;
+      outline: none;
+    }
+
+    .calc-input:focus {
+      border-color: var(--accent-blue);
+    }
+
+    .calc-result {
+      font-family: var(--ff-mono);
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--accent-green);
+      margin-top: 4px;
+    }
+
+    @media (max-width: 768px) {
+      .tab-btn {
+        flex: 1 1 calc(50% - 8px);
+        min-width: unset;
+      }
+    }
+
+    @media (max-width: 500px) {
+      body {
+        padding: 8px;
+      }
+      .header-title {
+        font-size: 20px;
+      }
+      .tab-btn {
+        flex: 1 1 100%;
+      }
+      .kpi-value {
+        font-size: 17px;
+      }
+      .charts-grid {
+        grid-template-columns: 1fr;
+      }
+      .widget-viewport {
+        height: 220px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="widget-container">
+    <div class="header-card">
+      <h1 class="header-title">Exhaustive Indian Guesstimate Cheat Sheet</h1>
+      <p class="header-subtitle">100% Data Included: Demographics, Gender, Digital, States, Cities, Vehicles, Energy, Physics & Master Formulas</p>
+    </div>
+
+    <!-- Responsive Flexible Tab Bar -->
+    <div class="nav-container">
+      <div class="nav-grid">
+        <button class="tab-btn is-active" data-tab="tab-1">
+          <span class="tab-num">1</span>
+          <span>Demographics, Gender & States</span>
+        </button>
+        <button class="tab-btn" data-tab="tab-2">
+          <span class="tab-num">2</span>
+          <span>Households, Cities & Geography</span>
+        </button>
+        <button class="tab-btn" data-tab="tab-3">
+          <span class="tab-num">3</span>
+          <span>Time, Vehicles & Tech Cycles</span>
+        </button>
+        <button class="tab-btn" data-tab="tab-4">
+          <span class="tab-num">4</span>
+          <span>Energy, Water & Food Weights</span>
+        </button>
+        <button class="tab-btn" data-tab="tab-5">
+          <span class="tab-num">5</span>
+          <span>Money, Salaries & Physics</span>
+        </button>
+        <button class="tab-btn" data-tab="tab-6">
+          <span class="tab-num">6</span>
+          <span>Master Framework & Flowchart</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- TAB 1: DEMOGRAPHICS, GENDER & STATES -->
+    <div id="tab-1" class="view-panel is-active">
+      <div class="kpi-row">
+        <div class="kpi-card">
+          <span class="kpi-label">India Population</span>
+          <span class="kpi-value">1.45–1.48 B</span>
+          <span class="kpi-sub">~148 Crore Baseline</span>
+        </div>
+        <div class="kpi-card">
+          <span class="kpi-label">Male : Female Ratio</span>
+          <span class="kpi-value" style="color: var(--accent-pink)">1.05 : 1</span>
+          <span class="kpi-sub">~51.2% Male / 48.8% Female</span>
+        </div>
+        <div class="kpi-card">
+          <span class="kpi-label">Median Age</span>
+          <span class="kpi-value" style="color: var(--accent-yellow)">28.5–29 Yrs</span>
+          <span class="kpi-sub">Life Expectancy: ~70–72 yrs</span>
+        </div>
+        <div class="kpi-card">
+          <span class="kpi-label">Literacy Rate</span>
+          <span class="kpi-value" style="color: var(--accent-green)">77–78%</span>
+          <span class="kpi-sub">National Average</span>
+        </div>
+      </div>
+
+      <div class="charts-grid">
+        <!-- Population Structure Tree -->
+        <div class="tree-card">
+          <span class="rule-tag">POPULATION STRUCTURE TREE</span>
+          <h3 class="chart-title">India Mental Tree Model</h3>
+          <div class="tree-node">India (~1.48B / 148 Cr)
+├── ~36% Urban        → ~53 crore
+├── ~64% Rural        → ~95 crore
+├── ~1/4 Children     → ~37 crore (<15 yrs)
+├── ~2/3 Working Age  → ~98 crore (15–64 yrs)
+└── ~8% Elderly       → ~12 crore (65+ yrs)</div>
+        </div>
+
+        <!-- Gender & Age Split Chart -->
+        <div class="chart-card">
+          <div class="chart-header">
+            <h3 class="chart-title">Age Distribution Breakdown</h3>
+            <span class="chart-caption">% Population</span>
+          </div>
+          <div class="widget-viewport">
+            <canvas id="ageDistChart"></canvas>
+          </div>
+        </div>
+      </div>
+
+      <!-- State Populations Chart -->
+      <div class="chart-card">
+        <div class="chart-header">
+          <h3 class="chart-title">Major Indian State Populations (Hierarchy Anchor)</h3>
+          <span class="chart-caption">Figures in Millions (M) — Total 28 States + 8 UTs</span>
+        </div>
+        <div class="widget-viewport">
+          <canvas id="stateHierarchyChart"></canvas>
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB 2: HOUSEHOLDS, CITIES & GEOGRAPHY -->
+    <div id="tab-2" class="view-panel">
+      <div class="kpi-row">
+        <div class="kpi-card">
+          <span class="kpi-label">Total Households</span>
+          <span class="kpi-value">31–33 Cr</span>
+          <span class="kpi-sub">Pop ÷ 4.5 Standard</span>
+        </div>
+        <div class="kpi-card">
+          <span class="kpi-label">Urban HHs</span>
+          <span class="kpi-value" style="color: var(--accent-purple)">11–12 Cr</span>
+          <span class="kpi-sub">Urban Target Base</span>
+        </div>
+        <div class="kpi-card">
+          <span class="kpi-label">Rural HHs</span>
+          <span class="kpi-value" style="color: var(--accent-green)">20–21 Cr</span>
+          <span class="kpi-sub">Rural Target Base</span>
+        </div>
+        <div class="kpi-card">
+          <span class="kpi-label">Land Area</span>
+          <span class="kpi-value" style="color: var(--accent-orange)">3.29M km²</span>
+          <span class="kpi-sub">N-S: 3.2k km | E-W: 2.9k km</span>
+        </div>
+      </div>
+
+      <div class="charts-grid">
+        <!-- Megacity Populations Chart -->
+        <div class="chart-card">
+          <div class="chart-header">
+            <h3 class="chart-title">Megacity Populations (UA)</h3>
+            <span class="chart-caption">Millions (M) — Top Metropolitan Regions</span>
+          </div>
+          <div class="widget-viewport">
+            <canvas id="cityPopChart"></canvas>
+          </div>
+        </div>
+
+        <!-- Major Distance Benchmarks -->
+        <div class="rule-card">
+          <span class="rule-tag">GEOGRAPHY & DISTANCES</span>
+          <h3 class="rule-title">City-to-City Distance Benchmarks</h3>
+          <ul class="metric-list">
+            <li class="metric-item"><span class="metric-key">Delhi ➔ Mumbai</span><span class="metric-val">~1,400 km</span></li>
+            <li class="metric-item"><span class="metric-key">Delhi ➔ Bengaluru</span><span class="metric-val">~2,150 km</span></li>
+            <li class="metric-item"><span class="metric-key">Delhi ➔ Kolkata</span><span class="metric-val">~1,500 km</span></li>
+            <li class="metric-item"><span class="metric-key">Mumbai ➔ Bengaluru</span><span class="metric-val">~980 km</span></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB 3: TIME, VEHICLES & TECH CYCLES -->
+    <div id="tab-3" class="view-panel">
+      <div class="kpi-row">
+        <div class="kpi-card">
+          <span class="kpi-label">Internet Users</span>
+          <span class="kpi-value">1.05–1.10 B</span>
+          <span class="kpi-sub">~1.09B Subscribers</span>
+        </div>
+        <div class="kpi-card">
+          <span class="kpi-label">Smartphones</span>
+          <span class="kpi-value" style="color: var(--accent-purple)">700–800 M</span>
+          <span class="kpi-sub">~690M Unique Users</span>
+        </div>
+        <div class="kpi-card">
+          <span class="kpi-label">Two-Wheelers</span>
+          <span class="kpi-value" style="color: var(--accent-green)">220M+</span>
+          <span class="kpi-sub">Primary Vehicle</span>
+        </div>
+        <div class="kpi-card">
+          <span class="kpi-label">Cars Fleet</span>
+          <span class="kpi-value" style="color: var(--accent-orange)">45–55 M</span>
+          <span class="kpi-sub">Four-Wheelers</span>
+        </div>
+      </div>
+
+      <div class="rule-grid">
+        <!-- Human Speeds & Movement -->
+        <div class="rule-card">
+          <span class="rule-tag">HUMAN MOVEMENT & TIME</span>
+          <h3 class="rule-title">Speeds, Steps & Work Hours</h3>
+          <ul class="metric-list">
+            <li class="metric-item"><span class="metric-key">Work Year Standard</span><span class="metric-val">2,000 hrs (250 days)</span></li>
+            <li class="metric-item"><span class="metric-key">Normal Walk</span><span class="metric-val">4–5 km/h</span></li>
+            <li class="metric-item"><span class="metric-key">Brisk Walk / Running</span><span class="metric-val">5–6 km/h / 8–12 km/h</span></li>
+            <li class="metric-item"><span class="metric-key">Stride Length</span><span class="metric-val">~0.7–0.8 m</span></li>
+            <li class="metric-item"><span class="metric-key">Steps / km</span><span class="metric-val">~1,300–1,500 steps</span></li>
+            <li class="metric-item"><span class="metric-key">10,000 Steps</span><span class="metric-val">~7–8 km</span></li>
+          </ul>
+        </div>
+
+        <!-- Vehicle Fleet Specs -->
+        <div class="rule-card">
+          <span class="rule-tag">VEHICLES & TRAFFIC</span>
+          <h3 class="rule-title">Occupancy, Fuel & Road Capacity</h3>
+          <ul class="metric-list">
+            <li class="metric-item"><span class="metric-key">Car Occupancy / Efficiency</span><span class="metric-val">1.5–2 ppl | 12–18 km/L</span></li>
+            <li class="metric-item"><span class="metric-key">Bike Occupancy / Efficiency</span><span class="metric-val">1.2–1.5 ppl | 40–60 km/L</span></li>
+            <li class="metric-item"><span class="metric-key">Fuel Tank Sizes</span><span class="metric-val">Car: 35–45 L | Bike: 10–13 L</span></li>
+            <li class="metric-item"><span class="metric-key">Road Capacity</span><span class="metric-val">1,000–2,000 vehicles/hr/lane</span></li>
+            <li class="metric-item"><span class="metric-key">Mobile Data Usage</span><span class="metric-val">18–30 GB / month</span></li>
+          </ul>
+        </div>
+
+        <!-- Product Replacement Cycles -->
+        <div class="rule-card">
+          <span class="rule-tag">REPLACEMENT CYCLES</span>
+          <h3 class="rule-title">Annual Replacement Benchmark</h3>
+          <ul class="metric-list">
+            <li class="metric-item"><span class="metric-key">Smartphone / Shoes</span><span class="metric-val">2.5–3.5 yrs / ~1 yr</span></li>
+            <li class="metric-item"><span class="metric-key">Laptop / Washing Machine</span><span class="metric-val">4–6 yrs / 8–12 yrs</span></li>
+            <li class="metric-item"><span class="metric-key">Car / Motorcycle</span><span class="metric-val">8–12+ yrs / 7–10 yrs</span></li>
+            <li class="metric-item"><span class="metric-key">TV / Refrigerator / Mattress</span><span class="metric-val">7–10 yrs / 10–15 yrs / 7–10 yrs</span></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB 4: ENERGY, WATER & FOOD WEIGHTS -->
+    <div id="tab-4" class="view-panel">
+      <div class="rule-grid">
+        <!-- Energy & Wattage -->
+        <div class="rule-card">
+          <span class="rule-tag">ELECTRICITY & POWER</span>
+          <h3 class="rule-title">Appliance Power Ratings</h3>
+          <ul class="metric-list">
+            <li class="metric-item"><span class="metric-key">LED Bulb</span><span class="metric-val">7–15 W</span></li>
+            <li class="metric-item"><span class="metric-key">Ceiling Fan</span><span class="metric-val">30–75 W</span></li>
+            <li class="metric-item"><span class="metric-key">Laptop / Desktop</span><span class="metric-val">40–85 W / 150–400 W</span></li>
+            <li class="metric-item"><span class="metric-key">TV</span><span class="metric-val">50–120 W</span></li>
+            <li class="metric-item"><span class="metric-key">Refrigerator</span><span class="metric-val">~1.2–2.0 kWh / day</span></li>
+            <li class="metric-item"><span class="metric-key">AC / Kettle / Microwave</span><span class="metric-val">1.2–2.0 kW while running</span></li>
+            <li class="metric-item"><span class="metric-key">1 Unit Electricity</span><span class="metric-val">1 kW for 1 hr = 1 kWh</span></li>
+          </ul>
+        </div>
+
+        <!-- Water & Calories -->
+        <div class="rule-card">
+          <span class="rule-tag">WATER & CALORIES</span>
+          <h3 class="rule-title">Daily Intake & Requirements</h3>
+          <ul class="metric-list">
+            <li class="metric-item"><span class="metric-key">Water Use</span><span class="metric-val">135 L / person / day (BIS)</span></li>
+            <li class="metric-item"><span class="metric-key">4-Person Family Water</span><span class="metric-val">~540 L/day (~200k L/yr)</span></li>
+            <li class="metric-item"><span class="metric-key">Lightly Active Adult</span><span class="metric-val">~1,800–2,200 kcal/day</span></li>
+            <li class="metric-item"><span class="metric-key">Average Adult</span><span class="metric-val">~2,000–2,400 kcal/day</span></li>
+            <li class="metric-item"><span class="metric-key">Very Active Adult</span><span class="metric-val">~2,500–3,000+ kcal/day</span></li>
+          </ul>
+        </div>
+
+        <!-- Food Weights & Volumes -->
+        <div class="rule-card">
+          <span class="rule-tag">FOOD WEIGHTS & VOLUMES</span>
+          <h3 class="rule-title">Item Weight Anchors</h3>
+          <ul class="metric-list">
+            <li class="metric-item"><span class="metric-key">1 Egg</span><span class="metric-val">~50–60 g</span></li>
+            <li class="metric-item"><span class="metric-key">1 Banana</span><span class="metric-val">~100–120 g</span></li>
+            <li class="metric-item"><span class="metric-key">1 Apple</span><span class="metric-val">~150–200 g</span></li>
+            <li class="metric-item"><span class="metric-key">1 Roti (flour) / Cup Rice</span><span class="metric-val">30–40 g / 150–200 g</span></li>
+            <li class="metric-item"><span class="metric-key">1 L Milk</span><span class="metric-val">~1.03 kg</span></li>
+            <li class="metric-item"><span class="metric-key">Teaspoon / Tbsp / Glass</span><span class="metric-val">5 mL / 15 mL / 250 mL</span></li>
+            <li class="metric-item"><span class="metric-key">Bucket / Bathtub</span><span class="metric-val">15–20 L / 150–250 L</span></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB 5: MONEY, SALARIES & PHYSICS -->
+    <div id="tab-5" class="view-panel">
+      <div class="rule-grid">
+        <!-- Indian Number & Money Scale -->
+        <div class="rule-card">
+          <span class="rule-tag">MONEY & SALARIES</span>
+          <h3 class="rule-title">Orders of Magnitude & Salaries</h3>
+          <ul class="metric-list">
+            <li class="metric-item"><span class="metric-key">₹50k/mo ➔ Annual</span><span class="metric-val">~₹6 Lakhs / year</span></li>
+            <li class="metric-item"><span class="metric-key">₹1L/mo ➔ Annual</span><span class="metric-val">~₹12 Lakhs / year</span></li>
+            <li class="metric-item"><span class="metric-key">₹2L/mo ➔ Annual</span><span class="metric-val">~₹24 Lakhs / year</span></li>
+            <li class="metric-item"><span class="metric-key">₹5L/mo ➔ Annual</span><span class="metric-val">~₹60 Lakhs / year</span></li>
+            <li class="metric-item"><span class="metric-key">1 Lakh / 1 Crore</span><span class="metric-val">100,000 / 10 Million</span></li>
+            <li class="metric-item"><span class="metric-key">100 Crore / 1 Lakh Crore</span><span class="metric-val">1 Billion / 1 Trillion</span></li>
+          </ul>
+        </div>
+
+        <!-- Physics Anchors -->
+        <div class="rule-card">
+          <span class="rule-tag">PHYSICS ANCHORS</span>
+          <h3 class="rule-title">Universal Physical Constants</h3>
+          <ul class="metric-list">
+            <li class="metric-item"><span class="metric-key">Earth Population</span><span class="metric-val">~8.2–8.3 Billion</span></li>
+            <li class="metric-item"><span class="metric-key">Earth Circumference</span><span class="metric-val">~40,075 km</span></li>
+            <li class="metric-item"><span class="metric-key">Speed of Light</span><span class="metric-val">~300,000 km/s</span></li>
+            <li class="metric-item"><span class="metric-key">Gravity / Air Density</span><span class="metric-val">9.8 m/s² / 1.2 kg/m³</span></li>
+            <li class="metric-item"><span class="metric-key">Water Density</span><span class="metric-val">1 kg/L (1,000 kg/m³)</span></li>
+            <li class="metric-item"><span class="metric-key">1 HP / 1 kWh</span><span class="metric-val">746 W / 3.6 MJ</span></li>
+          </ul>
+        </div>
+
+        <!-- Physical Object Dimensions & Weights -->
+        <div class="rule-card">
+          <span class="rule-tag">OBJECT ANCHORS</span>
+          <h3 class="rule-title">Lengths & Weights</h3>
+          <ul class="metric-list">
+            <li class="metric-item"><span class="metric-key">Hand / Arm / Door</span><span class="metric-val">~18–20 cm / ~70 cm / ~2 m</span></li>
+            <li class="metric-item"><span class="metric-key">Car / Bus Length</span><span class="metric-val">~4.0–4.5 m / ~10–12 m</span></li>
+            <li class="metric-item"><span class="metric-key">Phone / Laptop Weight</span><span class="metric-val">~160–220 g / ~1.2–2 kg</span></li>
+            <li class="metric-item"><span class="metric-key">Human / Motorcycle</span><span class="metric-val">~62–70 kg / ~110–180 kg</span></li>
+            <li class="metric-item"><span class="metric-key">Car Weight</span><span class="metric-val">~1.0–1.6 tonnes</span></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB 6: MASTER FRAMEWORK & FLOWCHART -->
+    <div id="tab-6" class="view-panel">
+      <div class="charts-grid">
+        <!-- Ratios & Percentages Cheat Sheet -->
+        <div class="rule-card">
+          <span class="rule-tag">CONVERSION SHORTCUTS</span>
+          <h3 class="rule-title">Percentage Rules of India</h3>
+          <ul class="metric-list">
+            <li class="metric-item"><span class="metric-key">0.01% of India</span><span class="metric-val">~148,000 People</span></li>
+            <li class="metric-item"><span class="metric-key">0.1% of India</span><span class="metric-val">~14.8 Lakhs (1.48 M)</span></li>
+            <li class="metric-item"><span class="metric-key">1% of India</span><span class="metric-val">~1.48 Crores (14.8 M)</span></li>
+            <li class="metric-item"><span class="metric-key">5% of India</span><span class="metric-val">~7.4 Crores (74 M)</span></li>
+            <li class="metric-item"><span class="metric-key">10% of India</span><span class="metric-val">~14.8 Crores (148 M)</span></li>
+            <li class="metric-item"><span class="metric-key">Population ➔ HHs</span><span class="metric-val">Population ÷ 4.5</span></li>
+          </ul>
+        </div>
+
+        <!-- Master Framework Calculator -->
+        <div class="rule-card">
+          <span class="rule-tag">MASTER FRAMEWORK SIMULATOR</span>
+          <h3 class="rule-title">Population ➔ Filter ➔ Frequency ➔ Price</h3>
+          <p class="rule-desc">Simulate TAM, Uber Rides, Coffee Spending, or Headphones Market</p>
+
+          <div class="calc-box">
+            <div class="calc-input-group">
+              <label class="calc-label">Target Base Population (Crores)</label>
+              <input type="number" id="masterPopCr" class="calc-input" value="148">
+            </div>
+            <div class="calc-input-group">
+              <label class="calc-label">Penetration Filter (%)</label>
+              <input type="number" id="masterPenPct" class="calc-input" value="1">
+            </div>
+            <div class="calc-input-group">
+              <label class="calc-label">Annual Frequency per Person (times/yr)</label>
+              <input type="number" id="masterFreqVal" class="calc-input" value="1">
+            </div>
+            <div class="calc-input-group">
+              <label class="calc-label">Unit Price / Ticket Size (₹)</label>
+              <input type="number" id="masterPriceVal" class="calc-input" value="1000">
+            </div>
+            <div class="calc-result" id="masterResultDisplay">TAM: ₹1,480 Crore</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <script>
+    // Tab Navigation Logic
+    const tabs = document.querySelectorAll('.tab-btn');
+    const panels = document.querySelectorAll('.view-panel');
+
+    tabs.forEach(tab => {
+      tab.addEventListener('click', () => {
+        tabs.forEach(t => t.classList.remove('is-active'));
+        panels.forEach(p => p.classList.remove('is-active'));
+
+        tab.classList.add('is-active');
+        const target = tab.getAttribute('data-tab');
+        document.getElementById(target).classList.add('is-active');
+      });
+    });
+
+    // Global Chart Defaults
+    Chart.defaults.color = '#94a3b8';
+    Chart.defaults.font.family = 'system-ui, -apple-system, sans-serif';
+
+    // 1. Age Distribution Chart
+    new Chart(document.getElementById('ageDistChart'), {
+      type: 'doughnut',
+      data: {
+        labels: ['0-14 (Children) 25%', '15-24 (Youth) 17%', '25-64 (Working) 50%', '65+ (Elderly) 8%'],
+        datasets: [{
+          data: [25, 17, 50, 8],
+          backgroundColor: ['#38bdf8', '#c084fc', '#4ade80', '#fb923c'],
+          borderWidth: 0
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: { legend: { position: 'bottom', labels: { boxWidth: 12, font: { size: 11 } } } }
+      }
+    });
+
+    // 2. State Population Hierarchy Chart
+    new Chart(document.getElementById('stateHierarchyChart'), {
+      type: 'bar',
+      data: {
+        labels: ['UP', 'Bihar', 'MH', 'WB', 'MP', 'RJ', 'TN', 'KA', 'GJ'],
+        datasets: [{
+          label: 'Population (Millions)',
+          data: [241, 131, 126, 100, 88, 83, 77, 68, 71],
+          backgroundColor: '#38bdf8',
+          borderRadius: 6
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: { legend: { display: false } },
+        scales: {
+          y: { grid: { color: '#334155' } },
+          x: { grid: { display: false } }
+        }
+      }
+    });
+
+    // 3. Megacities Chart (Urban Agglomerations)
+    new Chart(document.getElementById('cityPopChart'), {
+      type: 'bar',
+      data: {
+        labels: ['Delhi NCR', 'Mumbai', 'Kolkata', 'Bengaluru', 'Chennai', 'Hyderabad', 'Ahmedabad', 'Pune'],
+        datasets: [{
+          label: 'Population (Millions)',
+          data: [33, 21, 15.5, 13.8, 11.9, 10.8, 8.6, 7.2],
+          backgroundColor: '#c084fc',
+          borderRadius: 6
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: { legend: { display: false } },
+        scales: {
+          y: { grid: { color: '#334155' } },
+          x: { grid: { display: false } }
+        }
+      }
+    });
+
+    // Master TAM Calculator Script
+    function updateMasterCalculator() {
+      const popCr = parseFloat(document.getElementById('masterPopCr').value) || 0;
+      const penPct = parseFloat(document.getElementById('masterPenPct').value) || 0;
+      const freqVal = parseFloat(document.getElementById('masterFreqVal').value) || 0;
+      const priceVal = parseFloat(document.getElementById('masterPriceVal').value) || 0;
+
+      const tamCr = popCr * (penPct / 100) * freqVal * priceVal;
+      document.getElementById('masterResultDisplay').innerText = `Annual TAM: ₹${tamCr.toLocaleString('en-IN', { maximumFractionDigits: 1 })} Crore`;
+    }
+
+    document.getElementById('masterPopCr').addEventListener('input', updateMasterCalculator);
+    document.getElementById('masterPenPct').addEventListener('input', updateMasterCalculator);
+    document.getElementById('masterFreqVal').addEventListener('input', updateMasterCalculator);
+    document.getElementById('masterPriceVal').addEventListener('input', updateMasterCalculator);
+  </script>
+</body>
+</html>
